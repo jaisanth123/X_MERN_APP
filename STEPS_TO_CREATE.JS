@@ -100,4 +100,10 @@
 !: followunfollowuser controller
         => by the id as params find it 
 
+! NOTIFICATION SCHEMA AND A NEW MODEL NOTIFICATION
+    => create and save it while following and unfollowing in usercontroller
+
+! suggested post 
+    => create a route and a controller with protecetd route for a user
+
     */

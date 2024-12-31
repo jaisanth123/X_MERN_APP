@@ -18,7 +18,7 @@ try{
         return res.status(400).json({message: " user not found"})
     }
 
-    req.user = user  // making the request user to the user
+req.user = user  // making the request user to the user
     next()
 
 
