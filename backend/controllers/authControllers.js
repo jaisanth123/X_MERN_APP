@@ -1,0 +1,70 @@
+import User from "../models/userModel.js"
+import bcrypt from "bcryptjs"
+
+export const signup = async (req,res) =>{
+    try{
+        const {username,fullname,email,password} = req.body;
+
+
+
+        //! email validation
+        const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+        if(!emailRegex.test(email)){
+            return res.status(400).json({error:"Invalid email format"})
+        }
+
+
+
+        //! make sure it is a unique email and name
+        const existingEmail = await User.findOne({email}) // now checking with email we can also fetch by usernaem 
+
+        //note since the both variables are email we can give email alone not to give email:email but it is also correct
+
+        const existingUsername = await User.findOne({username}) 
+
+        if(existingEmail || existingUsername) {
+            return res.status(400).json({error:"Email or Username already exists"})
+        }
+
+
+        //! password length chcek
+        if(password.length < 8){
+            return res.status(400).json({error:"Password should be at least 8 characters long"})
+        }
+
+
+        //! password salting and hasing 
+        const salt = await bcrypt.genSalt(10); // it will do 10 salt and hash 10 times 
+        const hashedPassword = await bcrypt.hash(password,salt)
+
+
+        //! newUser with hased password
+        const newUser = new User({
+            username,
+            fullname,
+            email,
+            password: hashedPassword,  //since names, emial are same we dont need to give email:email but we changed password so do did like this
+        })
+
+
+        //! newUser saved in db
+        if(newUser){
+            await newUser.save();
+            res.status(201).json({message:"User saved successfully"})
+        }
+
+
+
+    }
+    catch(error){
+        console.error(`error in signup: ${error}`);
+        res.status(500).json({error:"Server Error"});
+    }
+}
+export const login = (req,res) =>{
+    res.send("signup inside controller")
+}
+export const logout = (req,res) =>{
+    res.send("signup inside controller")
+}

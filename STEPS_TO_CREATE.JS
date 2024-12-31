@@ -1,0 +1,70 @@
+/*
+!: npm init -y 
+     => -y is used to set the default like not entering the yes and dicription and all 
+
+!: npm i express mongoose dotenv
+    => using express , mongoose and dotenv
+    
+!: npm i jsonwebtoken bcryptjs cors cookie-parser cloudinary
+        => create a jsonwebtoken file
+        => bcryptjs to encrypt the store the sensitive data
+        => cors for middleware
+        => coockie-parse to store as cookie
+    
+!: in package.json set at the last "type":"module"
+        => to import the packages in the backend as same as how you do in frontend using import command inset of require command
+    
+        todo since we setting the type as module wile importing files that is created by us should be imported with extension like import auth form "authRouts.js"
+
+!: Step 1: 
+    => create a backend folder and create a sever.js file which is the entry point for the backend and where we are calling the express
+
+!: create a .env 
+    =>  file and mention the port in it since the forntend will default take 3000 for backend we use port 5000
+    => in server.js import dotenv and dotenv.congif()
+    => PORT = process.env.PORT = to access the port in the env file
+    
+!: MVC = Model , Control , Vie 
+    => Model = Backend controllers 
+    => control = intercation between client and the server
+    =>view => UI
+
+!: app.use("/api/auth",authRoutes)
+    => if any request comes in the path from /api/auth  it will be handled by authRoutes
+
+!: Routes
+    => if which url is comming after /api/auth/... it will be correspondingly handled by authRoutes which calls the corresponding functions in the authControllers.js file 
+
+!: connect mongodb
+    =>in env specfify the mongo url 
+    => create a db folder and create ConnectDB.js file 
+    => use async function sice it returns a promise 
+    => use await mongoose .connect to connect it 
+    => catch error and print it 
+    todo  process.exit(1) indicates if this error occur it will stop the entire process of the app 1 means true so process.exit(1
+    => export it  as default
+    => import and use it in server.js since after the port running the connection should be done so we used inside the lister funcion after the connection is done
+
+!: Schema construction 
+    => in the models folder create a file userSchema 
+    => use mongoose.Schema function
+    => create a schema and create a model and export it as default
+
+!: login and logout controllers 
+    => add routes for login and logout
+    => add controllers for login and logout
+    => and import in the routes folder
+
+!: signup controller
+    => get the parameter form the req.body
+    => to use req.body you need to specify app.use(express.json()) (MIDDLEWARE) in the server.js file
+    => import the user model from the db folder for validation
+    bug: Email Validation 
+        => use regex from the internet to validate the email
+        => check weacther the email or username is already in the database via fetcOne
+    bug: password hashing 
+        => import bcrypt form bcryptjs
+        => use salting 
+
+
+    */
