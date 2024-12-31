@@ -105,5 +105,8 @@
 
 ! suggested post 
     => create a route and a controller with protecetd route for a user
+! Update rout 
+    => it is used to update the password bio profile , image etc .. 
+    => werite a contoller for it 
 
     */
