@@ -16,7 +16,7 @@
     
         todo since we setting the type as module wile importing files that is created by us should be imported with extension like import auth form "authRouts.js"
 
-!: Step 1: 
+!: BACKEND: 
     => create a backend folder and create a sever.js file which is the entry point for the backend and where we are calling the express
 
 !: create a .env 
@@ -84,6 +84,10 @@
 
 !: logout
     => making the jwt token as null by setting the maxAge to 0 
-
-
+!: getme 
+    => it is a middleware in authroutes middleware is used call protectRoute which is a function defined in middleware folder 
+    => which gets the jwt token 
+    bug getting jwt token 
+        => to get jwt token we have to use a middleware in server.js which to send cookies from cliend to server ,import cookieParser from "cookie-parser", app.use(cookieParser())
+    =>decode it and find the user and make it as the req user and use next() to go to the getme fucntion in the controller 
     */

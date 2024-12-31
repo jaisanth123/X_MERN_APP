@@ -129,11 +129,25 @@ export const logout = async(req,res) =>{
         res.cookie("jwt","",{maxAge: 0}) // it will create and next second it will delete . since it have same coockie name the old coockie will be overwrited
         res.status(200).json({message:"Logged out successful"})
 
-        //bug: after running this the cookie is removed 
+        //bug: after running this the cookie is
 
     }
     catch(error){
         console.error(`error in logout: ${error}`);
         res.status(500).json({error:"Error while Logout"});
+    }
+}
+
+//! ==================== GETME CONTROLLER ====================
+
+export const getMe = async(req,res) =>{
+    try{
+        const user = await User.findOne({_id:req.user._id}).select("-password")
+        res.status(200).json(user);
+
+    }
+    catch(error){
+        console.error(`error in getMe: ${error}`);
+        res.status(500).json({error:"Error while getting user info"});
     }
 }
