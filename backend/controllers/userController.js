@@ -117,11 +117,11 @@ export const updateUser = async(req,res) =>{
         if((!currentPassword && newPassword) || (currentPassword && !newPassword)){
             return res.status(400).json({message: 'Current password and new password are required'})
         }
-        if((!currentPassword && newPassword) || (currentPassword && !newPassword)){
+        if(currentPassword && newPassword){
             const isMatch = await bcrypt.compare(currentPassword, user.password)
             //here current password is the password by the user and the user.password is the hased password in the daatbase
             if(!isMatch){
-                return res.statu(400).json({message:"current password is incorred"})
+                return res.status(400).json({message:"current password is incorred"})
             }
 
             if(newPassword.length < 8 ){
