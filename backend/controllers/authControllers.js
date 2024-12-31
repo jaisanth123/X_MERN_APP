@@ -1,5 +1,10 @@
 import User from "../models/userModel.js"
 import bcrypt from "bcryptjs"
+import generateToken from "../utils/generateToken.js";
+
+
+
+//! ==================== SIGNUP CONTROLLER ====================
 
 export const signup = async (req,res) =>{
     try{
@@ -8,7 +13,9 @@ export const signup = async (req,res) =>{
 
 
         //! email validation
-        const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+
 
         if(!emailRegex.test(email)){
             return res.status(400).json({error:"Invalid email format"})
@@ -50,8 +57,25 @@ export const signup = async (req,res) =>{
 
         //! newUser saved in db
         if(newUser){
+
+            generateToken(newUser._id , res)
+
             await newUser.save();
-            res.status(201).json({message:"User saved successfully"})
+            res.status(201).json({
+                _id : newUser._id,
+                username: newUser.username,
+                fullname: newUser.fullname,
+                email: newUser.email,
+                followers:newUser.followers,
+                following:newUser.following,
+                profileImg : newUser.profileImg,
+                coverImg: newUser.converImg,
+                big : newUser.bio,
+                link : newUser.link
+            })
+        }
+        else{
+            res.status(400).json({error:"Invalid user Data"})
         }
 
 
@@ -62,8 +86,40 @@ export const signup = async (req,res) =>{
         res.status(500).json({error:"Server Error"});
     }
 }
-export const login = (req,res) =>{
-    res.send("signup inside controller")
+
+
+
+//! ==================== LOGIN CONTROLLER ====================
+
+export const login = async(req,res) =>{
+
+    try{
+        const {username , password} = req.body
+        const user = await User.findOne({username})
+        const isPasswordCorrect = await bcrypt.compare(password , User.password || "") // it is used avoid app crash
+
+        if(!user){
+            return res.status(404).json({error:"User not found "})}
+        generateToken(user._id , res)
+        res.status(200).json({
+            _id : user._id,
+            username: user.username,
+            fullname: user.fullname,
+            email: user.email,
+            followers:user.followers,
+            following:user.following,
+            profileImg : user.profileImg,
+            coverImg: user.converImg,
+            big : user.bio,
+            link : user.link
+        })
+
+        
+    }
+    catch(error){
+        console.error(`error in login: ${error}`);
+        res.status(500).json({error:"Error while Login"});
+    }
 }
 export const logout = (req,res) =>{
     res.send("signup inside controller")

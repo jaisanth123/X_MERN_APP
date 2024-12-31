@@ -59,12 +59,25 @@
     => get the parameter form the req.body
     => to use req.body you need to specify app.use(express.json()) (MIDDLEWARE) in the server.js file
     => import the user model from the db folder for validation
-    bug: Email Validation 
+    todo: Email Validation 
         => use regex from the internet to validate the email
         => check weacther the email or username is already in the database via fetcOne
-    bug: password hashing 
+    todo: password hashing 
         => import bcrypt form bcryptjs
         => use salting 
+!: postman url hit
+    =>use the url 
+    => give the body content => raw => jason => your data => send
+
+!: JWT 
+    => use generatetoken(newUser._id,res) before saving the newUser which is a fucntion defined in utils -> generateToken.js
+    todo => generateToken function
+        bug: token => 
+            => sign a token with userid , random text which is stored in a env and expires time
+        bug: resposne cookie
+            => mention jwt wiht the token genereated with object of maxAge , httpOnly , sameSite , secure values .
+
+        export the generate token function 
 
 
     */
