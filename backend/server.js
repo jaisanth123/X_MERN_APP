@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import authRoutes from "./routes/authRoutes.js"
 import connectDB from "./db/connectDB.js"
 import cookieParser from "cookie-parser"
+import userRoutes from "./routes/userRoutes.js"
 
 
 dotenv.config();
@@ -18,9 +19,7 @@ app.use(cookieParser())
     res.send("X_Clone MERN")
 }) */
 app.use("/api/auth", authRoutes);
-/*app.get("/api/auth",(req,res)=>{
-    res.send("Auth route is working")
-})*/
+app.use("/api/users", userRoutes);
 
 
 

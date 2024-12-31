@@ -90,4 +90,14 @@
     bug getting jwt token 
         => to get jwt token we have to use a middleware in server.js which to send cookies from cliend to server ,import cookieParser from "cookie-parser", app.use(cookieParser())
     =>decode it and find the user and make it as the req user and use next() to go to the getme fucntion in the controller 
+
+!User routes and controller 
+    => create two functions in userroutes getprofile and followunfollowuser 
+
+!: getprofile controller
+    => by name as as params find the user 
+
+!: followunfollowuser controller
+        => by the id as params find it 
+
     */
