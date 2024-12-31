@@ -79,5 +79,11 @@
 
         export the generate token function 
 
+!: login 
+    => checks the username and password in the database since the password in the db is encrypted we use await bcrypt.compare and then returning 
+
+!: logout
+    => making the jwt token as null by setting the maxAge to 0 
+
 
     */

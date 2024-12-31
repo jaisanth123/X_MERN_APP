@@ -94,8 +94,8 @@ export const signup = async (req,res) =>{
 export const login = async(req,res) =>{
 
     try{
-        const {username , password} = req.body
-        const user = await User.findOne({username})
+        const {username , password } = req.body
+        const user = await User.findOne({username}) 
         const isPasswordCorrect = await bcrypt.compare(password , User.password || "") // it is used avoid app crash
 
         if(!user){
@@ -121,6 +121,19 @@ export const login = async(req,res) =>{
         res.status(500).json({error:"Error while Login"});
     }
 }
-export const logout = (req,res) =>{
-    res.send("signup inside controller")
+
+
+//! ==================== LOGIN CONTROLLER ====================
+export const logout = async(req,res) =>{
+    try{
+        res.cookie("jwt","",{maxAge: 0}) // it will create and next second it will delete . since it have same coockie name the old coockie will be overwrited
+        res.status(200).json({message:"Logged out successful"})
+
+        //bug: after running this the cookie is removed 
+
+    }
+    catch(error){
+        console.error(`error in logout: ${error}`);
+        res.status(500).json({error:"Error while Logout"});
+    }
 }
