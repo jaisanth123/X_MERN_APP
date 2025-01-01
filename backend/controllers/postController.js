@@ -230,3 +230,28 @@ export const getFollowingPosts = async(req,res) =>{
         res.status(500).json({error:"Error while getting following posts"});
     }
 }
+
+export const getUserPosts = async (req, res) =>{
+
+    try{
+        const userId = req.params.id
+        const user = await User.findOne({_id:userId})
+        if(!user){
+            return res.status(404).json({message: 'User not found'})
+        }
+        const posts = await Post.find({user:user.id}).sort({createdAt:-1}).populate({
+            path:"user",
+            select:"-password"
+        }).populate({
+            path:"comments.user",
+            select: ["-password"]
+        })   // populating and removing the required feilds
+        res.status(200).json(posts)  // it will return all the posts which are created by the user with all the comments of each post ^^
+        
+    }
+    catch(err){
+        console.error(`Error in getting user posts: ${err}`);
+        res.status(500).json({error:"Error while getting user posts"});
+    }
+
+}
