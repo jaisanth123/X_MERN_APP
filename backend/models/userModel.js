@@ -50,7 +50,11 @@ const userSchema = mongoose.Schema({
     link :{
         type : String,
         default:""
-    },  
+    },
+    likedPosts:[{
+        type: mongoose.Schema.Types.ObjectId,
+        default:[]
+    }]  
 },{timestamps : true}) //todo mongo db will automatically stores the time of when created and when lastubdated so we give it as a parameter
 
 

@@ -124,14 +124,17 @@ export const likeUnlikePost = async (req,res) =>{
         if(userLikedPost){
             //unlike post
             await Post.updateOne({_id:postId},{$pull:{likes : userId}})
+            await User.updateOne({_id:userId},{$pull:{likedPosts: postId}})
             res.status(200).json({"message": "Post unliked successfully"})
     
         }
         else{
+            //like the post
             await Post.updateOne({_id:postId},{$push:{likes:userId}})
+            await User.updateOne({_id:userId},{$push:{likedPosts: postId}})
+
             res.status(200).json({"message": "Post liked successfully"})
        
-            //like the post
         }
         //!Notification
         const newnotification = new Notification({
@@ -150,8 +153,15 @@ export const likeUnlikePost = async (req,res) =>{
 export const getAllPosts = async(req, res) =>{
     try{
 
-        const posts = await Post.find().sort({createdAt:-1})  // show all the posts in the decending order of creation 
-        
+        const posts = await Post.find().sort({createdAt:-1}).populate({
+            path:"user",
+            select:"-password"
+
+            // or . populate(user) it will also work but .seleict("-password") will not work with this type
+        })  // show all the posts in the decending order of creation 
+        .populate({path:"comments.user",  // it will populate and filter the info of the user object in the comment section array 
+            select: ["-password","-email","-following","-followers","-bio","-link"]
+        })
         if(posts.length === 0){
             return res.status(404).json([])  // if no post is found then return error message 404 not found ^^
         }
@@ -166,3 +176,28 @@ export const getAllPosts = async(req, res) =>{
 
 }
 
+export const getLikedPost = async (req,res) =>{
+    try{    
+        const userId = req.params.id  
+        // if we go to our account it will show which post we liked 
+        // if we go to other accounts it will which posts they liked 
+        const user = await User.findOne({_id:userId})
+        if(!user){
+            return res.status(404).json({message: 'User not found'})
+        }
+
+        const likedPosts = await Post.find({
+            _id:{$in: user.likedPosts}}).populate({
+                path:"comments.user",
+                select: ["-password","-email","-following","-followers","-bio","-link"]
+            })
+            //here likedPost will have the current user liked posts id . by using that id . we will fetch the entire post obj from post db
+        
+        
+        res.status(200).json(likedPosts)  // it will return all the posts which are liked by the user with all the comments of each post ^^
+    }
+    catch(err){
+        console.error(`Error in getting liked posts: ${err}`);
+        res.status(500).json({error:"Error while getting liked posts"});
+    }
+}
