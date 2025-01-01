@@ -14,7 +14,7 @@ const notificationSchema = mongoose.Schema({
     type:{
         type: String,
         required: true,
-        enum :['follow','like','comment']  // it will to send notifications when we choose either follow or like
+        enum :['follow','unfollow','like','comment']  // it will to send notifications when we choose either follow or like
     },
     read:{
         type: Boolean,

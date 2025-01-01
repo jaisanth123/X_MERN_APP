@@ -109,4 +109,8 @@
     => it is used to update the password bio profile , image etc .. 
     => werite a contoller for it 
 
+
+! some other routes and controllers
+
+    => wirte required controller and routes and models for the required functionality 
     */

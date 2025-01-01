@@ -27,7 +27,6 @@ export const createPost = async(req,res) =>{
             user:userId,
             text,
             img
-
         })
 
         await newPost.save();
@@ -54,7 +53,7 @@ export const deletePost = async(req,res) =>{
             // only the owners of the post can delete it . for that check 
             return res.status(404).json({message: 'Unauthorized to delete this post'})
         }
-        
+    
         if(post.img){
             const imgId = post.img.split("/").pop().split(".")[0]
             await cloudinary.uploader.destroy(imgId)
@@ -177,7 +176,7 @@ export const getAllPosts = async(req, res) =>{
 }
 
 export const getLikedPost = async (req,res) =>{
-    try{    
+    try{  
         const userId = req.params.id  
         // if we go to our account it will show which post we liked 
         // if we go to other accounts it will which posts they liked 
@@ -199,5 +198,35 @@ export const getLikedPost = async (req,res) =>{
     catch(err){
         console.error(`Error in getting liked posts: ${err}`);
         res.status(500).json({error:"Error while getting liked posts"});
+    }
+}
+ 
+export const getFollowingPosts = async(req,res) =>{
+    try{
+        const userId = req.user.id  
+        //not params.id becaue we not use following/:id
+        console.log(userId)
+        const user = await User.findOne({_id:userId})
+
+        if(!user){
+            return res.status(404).json({message: 'User not found'})
+        }
+        const followingUserIds = user.following
+        const feedPosts = await Post.find({user:{$in : followingUserIds}}).sort({createdAt: -1}).populate({
+            path:"user",
+            select:"-password"
+        }).populate({
+            path:"comments.user",
+            select: ["-password"]
+        })
+        //user is the feild in the post schema in that first we getting the users that he follows in follwoingusersIds with that use includes $in in the users of hte post and if the follwoinguserId is the user of hte id then fetch it
+
+        // sort it and pruplate it the according User model objects 
+
+        res.status(200).json(feedPosts)  // it will return all the posts which are created by the users that he follows with all the comments of each post ^^
+    }
+    catch(err){
+        console.error(`Error in getting following posts: ${err}`);
+        res.status(500).json({error:"Error while getting following posts"});
     }
 }
