@@ -9,7 +9,7 @@ export const getNotifications = async(req,res) =>{
         })
 
         await Notification.updateMany({to:userId},{read:true})   //once this route is called the notification is showen in the frontend
-
+        res.status(200).json(notification)
 
     }
     catch(err){
