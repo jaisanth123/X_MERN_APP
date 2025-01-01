@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser"
 import userRoutes from "./routes/userRoutes.js"
 import cloudinary from "cloudinary"
 import postRoutes from "./routes/postRoutes.js"
+import notificationRoutes from "./routes/norificationRoutes.js"
 
 
 dotenv.config();
@@ -34,6 +35,7 @@ cloudinary.config({
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
+app.user("/api/notifications",notificationRoutes)
  
   
  
