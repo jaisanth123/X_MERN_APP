@@ -6,5 +6,5 @@ import { getNotifications, deletetNotifications } from '../controllers/notificat
 
 
 router.get("/",protectRoute,getNotifications)
-router.get("/",protectRoute,deletetNotifications)
+router.delete("/",protectRoute,deletetNotifications)
 export default router

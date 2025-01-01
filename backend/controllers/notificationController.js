@@ -13,7 +13,7 @@ export const getNotifications = async(req,res) =>{
 
     }
     catch(err){
-        console.log(`eoori in getNotification ${err}`)
+        console.log(`error in getNotification ${err}`)
         res.status(400),json(err)
     }
 }
@@ -21,9 +21,17 @@ export const getNotifications = async(req,res) =>{
 
 
 export const deletetNotifications = async(req,res) =>{
-    try{}
+    try{
+        const userId = req.user.id
+
+        await Notification.deleteMany({to:userId})
+
+        res.status(200).json({message:"All notifications deleted"})
+
+
+    }
     catch(err){
-        console.log(`eoori in deletetNotifications ${err}`)
+        console.log(`error in deletetNotifications ${err}`)
         res.status(400),json(err)
     }
 }

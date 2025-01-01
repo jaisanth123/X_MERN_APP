@@ -15,7 +15,7 @@ try{
     const user = await User.findOne({_id:decoded.userID}).select("-password") // find the user from the id without fetching the password
     // userID is the name given while signing the jwt token
     if(!user){
-        return res.status(400).json({message: " user not found"})
+        return res.status(404).json({message: " user not found"})
     }
 
 req.user = user  // making the request user to the user
