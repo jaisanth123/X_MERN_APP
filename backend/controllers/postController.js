@@ -147,3 +147,22 @@ export const likeUnlikePost = async (req,res) =>{
     }
 }
 
+export const getAllPosts = async(req, res) =>{
+    try{
+
+        const posts = await Post.find().sort({createdAt:-1})  // show all the posts in the decending order of creation 
+        
+        if(posts.length === 0){
+            return res.status(404).json([])  // if no post is found then return error message 404 not found ^^
+        }
+        
+        res.status(200).json(posts)
+
+    }
+    catch(err){
+        console.error(`Error in getting all posts: ${err}`);
+        res.status(500).json({error:"Error while getting all posts"});
+    }
+
+}
+
