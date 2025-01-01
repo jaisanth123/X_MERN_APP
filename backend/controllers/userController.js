@@ -46,6 +46,7 @@ export const followUnfollowUser = async(req,res) =>{
                 from:id,
                 to : req.user._id
             })
+            await newNotification.save()
 
         }
         else{

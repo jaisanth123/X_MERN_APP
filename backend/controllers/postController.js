@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import Post from "../models/postModel.js";
 import cloudinary from "cloudinary"
 import Notification from "../models/notificationModel.js";
+
 export const createPost = async(req,res) =>{
 
     try{
@@ -100,6 +101,8 @@ export const createComment = async(req,res) => {
             from:req.user._id,
             to : post.user,
         })
+
+        await newNotification.save()
     
     }
     catch(err){
@@ -108,4 +111,39 @@ export const createComment = async(req,res) => {
     }
 }
 
+export const likeUnlikePost = async (req,res) =>{
+    try{
+        const userId = req.user._id;
+        const postId = req.params.id;
+        const post = await Post.findOne({_id:postId})
+        if(!post){
+            return res.status(404).json({message: 'Post not found'})
+        }
+        const userLikedPost = post.likes.includes(userId)
+
+        if(userLikedPost){
+            //unlike post
+            await Post.updateOne({_id:postId},{$pull:{likes : userId}})
+            res.status(200).json({"message": "Post unliked successfully"})
+    
+        }
+        else{
+            await Post.updateOne({_id:postId},{$push:{likes:userId}})
+            res.status(200).json({"message": "Post liked successfully"})
+       
+            //like the post
+        }
+        //!Notification
+        const newnotification = new Notification({
+            from:userId,
+            to: post.user,  //which is the owner of th post 
+            type:'like'
+        })
+        await newnotification.save()
+    }
+    catch(err){
+        console.error(`Error in liking/unliking post: ${err}`);
+        res.status(500).json({error:"Error while liking/unliking post"});
+    }
+}
 
