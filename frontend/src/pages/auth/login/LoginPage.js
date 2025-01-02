@@ -5,7 +5,7 @@ import XSvg from "../../../components/svgs/X";
 
 import { FaUser } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {baseUrl} from "../../../constant/url.js"
 import toast from "react-hot-toast"
 import LoadingSpinner from "../../../components/common/LoadingSpinner.js";
@@ -15,6 +15,8 @@ const LoginPage = () => {
 		username: "",
 		password: "",
 	});
+
+const queryClient = useQueryClient()
 
 
 const {mutate:login, isPending , isError,error} = useMutation({
@@ -47,12 +49,19 @@ const {mutate:login, isPending , isError,error} = useMutation({
 
 
 
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		toast.promise(
 			new Promise((resolve,reject) =>{
 				login(formData,{
-				onSuccess : resolve,
+				onSuccess : ()=>{  resolve();
+					queryClient.invalidateQueries({
+						//refetch the authUser
+						// we are invalidating the authuser then it will work it is indirectly refetch
+						queryKey: ["authUser"]
+					})
+				},
 				onError : reject,
 			});
 			})
