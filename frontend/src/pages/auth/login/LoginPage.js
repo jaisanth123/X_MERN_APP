@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 
 import XSvg from "../../../components/svgs/X";
 
-import { MdOutlineMail } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
 import {baseUrl} from "../../../constant/url.js"
 import toast from "react-hot-toast"
+import LoadingSpinner from "../../../components/common/LoadingSpinner.js";
 
 const LoginPage = () => {
 	const [formData, setFormData] = useState({
@@ -33,10 +34,12 @@ const {mutate:login, isPending , isError,error} = useMutation({
 			if(!res.ok){
 				throw Error(data.error || "Something went wrong")
 			}
+
+			return data;
 		}
 		catch(e){
 			console.error(`Error in login: ${e}`);
-            throw new Error("Error while Login");
+            throw new Error(e.message);
 			//! in catch block also we throwing because in the useMutate function there is a error handler that will handle error 
 		}
 	}
@@ -76,7 +79,7 @@ const {mutate:login, isPending , isError,error} = useMutation({
 					<XSvg className='w-24 lg:hidden fill-white' />
 					<h1 className='text-4xl font-extrabold text-white'>{"Let's"} go.</h1>
 					<label className='input input-bordered rounded flex items-center gap-2'>
-						<MdOutlineMail />
+						<FaUser />
 						<input
 							type='text'
 							className='grow'
@@ -98,7 +101,10 @@ const {mutate:login, isPending , isError,error} = useMutation({
 							value={formData.password}
 						/>
 					</label>
-					<button className='btn rounded-full btn-primary text-white'>{isPending ? "Loading": "Login"}</button>
+					<button className='btn rounded-full btn-primary text-white'>{isPending ? <LoadingSpinner/>: "Login"}
+
+
+					</button>
 					{isError && <p className='text-red-500'>{error.message}</p>}
 				</form>
 				<div className='flex flex-col gap-2 mt-4'>

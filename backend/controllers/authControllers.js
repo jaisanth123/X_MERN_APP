@@ -84,13 +84,16 @@ export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      User.password || ""
-    ); // it is used avoid app crash
-
     if (!user) {
       return res.status(404).json({ error: "User not found " });
+    }
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      User.password
+    ); // it is used avoid app crash
+
+    if(!isPasswordCorrect) {
+      return res.status(400).json({ error: "Password is incorrect" });
     }
     generateToken(user._id, res);
     res.status(200).json({
