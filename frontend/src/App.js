@@ -1,18 +1,20 @@
+import React from "react";
+import {Routes , Route} from "react-router-dom"
 
+import SignUpPage from "./pages/auth/signup/SignUpPage.js";
+//import LoginPage from "./componests/auth/LoginPage.js";
+//import SignupPage from "./componests/auth/SignupPage.js";
 function App() {
-  return (
-    <>
-    <div className="text-2xl text-white m-10 bg-slate-400 rounded-md">
-      {/* rounded md is like border-radius*/}
-      hello
-
-      
-
-    </div>
-    <button className="btn btn-lg btn-success btn-outline">Accent</button>
-    {/* btn-outline will show only outline while not hovering */}
-    </>
-  );
+	return (
+		<div className='flex max-w-6xl mx-auto'>
+			<Routes>
+				{/* <Route path='/' element={<HomePage />} /> */}
+				<Route path='/signup' element={<SignUpPage />} />
+				{/*<Route path='/login' element={<LoginPage />} /> */}
+			</Routes>
+		</div>
+	);
 }
+
 
 export default App;

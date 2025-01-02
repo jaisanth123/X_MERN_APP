@@ -15,7 +15,7 @@ module.exports = {
             black: {
               ...daisyUIThemes["black"],
               primary: "rgb(29,155,240)",  //twitter blue color  //! when we use primary in tailwind that will use this color
-              primary: "rgb(24,24,24)",
+              secondary: "rgb(24,24,24)",
             },
           },
         ],

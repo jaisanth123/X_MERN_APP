@@ -136,5 +136,15 @@
         => import daisyUIThemes  from "daisyui/src/theming/themes" import this us tailwind config 
         => mention the daisyui object in the tailwind.css
 
+! react icons
+    => to install the react-icons
+
+    => react-icons -> homepage -> website link        
+    
+! ROUTER DON INITILIZE
+    => npm i react-router-dom
+    
+    => in the index.js file  import { BrowserRouter } from 'react-router-dom'; and cover the app compnent with BrowserRouter
+
 
     */
