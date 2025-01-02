@@ -146,5 +146,7 @@
     
     => in the index.js file  import { BrowserRouter } from 'react-router-dom'; and cover the app compnent with BrowserRouter
 
-
+! after form end 
+    => npm i @tanstack/react-query
+    => update index.js
     */

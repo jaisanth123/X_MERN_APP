@@ -8,12 +8,21 @@ import userRoutes from "./routes/userRoutes.js";
 import cloudinary from "cloudinary";
 import postRoutes from "./routes/postRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
-
+import cors from "cors"
 dotenv.config();
 const PORT = process.env.PORT;
 const app = express();
+
+
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true, //allow the client to send cookies
+}))
+app.use(express.urlencoded({
+  extended: true, // support parsing of application/x-www-form-urlencoded
+}));
 
 /*app.get("/",(req,res)=>{
     res.send("X_Clone MERN")
