@@ -41,7 +41,8 @@ const SignUpPage = () => {
 					<XSvg className='w-24 lg:hidden fill-white' />
 					<h1 className='text-4xl font-extrabold text-white'>Join today.</h1>
 					<label className='input input-bordered rounded flex items-center gap-2'>
-						<MdOutlineMail />
+						<MdOutlineMail />  
+						{/* mail image */}
 						<input
 							type='email'
 							className='grow'
@@ -91,6 +92,8 @@ const SignUpPage = () => {
 				</form>
 				<div className='flex flex-col lg:w-2/3 gap-2 mt-4'>
 					<p className='text-white text-lg'>Already have an account?</p>
+					
+					{/* link to the login page  */}
 					<Link to='/login'>
 						<button className='btn rounded-full btn-primary text-white btn-outline w-full'>Sign in</button>
 					</Link>
