@@ -9,7 +9,51 @@ import RightPanel from "./components/common/RightPanel.js";
 import NotificationPage from "./pages/notification/NotificationPage.js";
 import ProfilePage from "./pages/profile/ProfilePage.js";
 import {Toaster} from "react-hot-toast"
-function App() {
+import { useQuery } from "@tanstack/react-query";
+import { baseUrl } from "./constant/url.js";
+import LoadingSpinner from "./components/common/LoadingSpinner.js";
+
+
+const App = ()=> {
+
+	const {data : authUser , isLoading} = useQuery({  // this auth user have the data of the one who authenticated currently
+		queryKey: ["authUser"],  // by using this querykey we can call this function from any where
+		queryFn: async() =>{
+			try{
+				const res = await fetch(`${baseUrl}/api/auth/me`,{
+					method:"GET",
+					credentials: "include",
+					headers:{
+						"Content-Type": "application/json"
+					}
+				})
+				const data = await res.json();
+				console.log(data)
+				if(!res.ok){
+					const errorData = await res.json()
+					throw new Error(errorData.error || "Not authenticated")
+				}
+				return data;
+			}
+			catch(e){
+				console.error(e)
+				throw e;
+			}
+		}
+
+	})
+
+	if(isLoading){
+		return(
+			<div className="flex justify-center items-center h-screen">
+				<LoadingSpinner size="3xl"/> 
+				{/* overriding size by lg */}
+
+
+			</div>
+		)
+	}
+
 	return (
 		<div className='flex max-w-6xl mx-auto'>
 			<Sidebar />

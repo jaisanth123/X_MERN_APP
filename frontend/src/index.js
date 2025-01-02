@@ -10,7 +10,13 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,  // it will avoid refetch when we change the tab
+    },
+  },
+})
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -20,8 +26,6 @@ root.render(
     <QueryClientProvider client={queryClient}>
         <App />
     </QueryClientProvider>
-        
-    
     </BrowserRouter>
   </React.StrictMode>
 );
