@@ -5,6 +5,7 @@ import SignUpPage from "./pages/auth/signup/SignUpPage.js";
 import LoginPage from "./pages/auth/login/LoginPage.js";
 import HomePage from "./pages/home/Homepage.js";
 import Sidebar from "./components/common/Sidebar.js";
+import RightPanel from "./components/common/RightPanel.js";
 function App() {
 	return (
 		<div className='flex max-w-6xl mx-auto'>
@@ -14,6 +15,7 @@ function App() {
 				<Route path='/signup' element={<SignUpPage />} />
 				<Route path='/login' element={<LoginPage />} />
 			</Routes>
+			<RightPanel />
 		</div>
 	);
 }
