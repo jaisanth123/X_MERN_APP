@@ -13,7 +13,7 @@ import {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,  // it will avoid refetch when we change the tab
+      refetchOnWindowFocus: false,  // it will avoid refetch when we 
     },
   },
 })
