@@ -113,4 +113,28 @@
 ! some other routes and controllers
 
     => wirte required controller and routes and models for the required functionality 
+
+
+
+
+
+
+! ======================================= frontend ========================================= 
+ 
+
+ ! npm create-ract-app .
+    => if we use npm create-ract-app . it will ask the project name to create since we created the frontend app inside another folder will be created to avoid that we use npm create vite@latest . to initlize in the same folder 
+    
+    => get some public images from the git 
+
+    => install tailwind 
+
+    => use daisyui for prebuilt components with tailwind 
+! Daisyui 
+    =>npm i -D daisyui@latest
+        => to install the daisyui 
+        => import daisyUIThemes  from "daisyui/src/theming/themes" import this us tailwind config 
+        => mention the daisyui object in the tailwind.css
+
+
     */
