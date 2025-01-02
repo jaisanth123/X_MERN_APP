@@ -28,22 +28,27 @@ const App = ()=> {
 						"Content-Type": "application/json"
 					}
 				})
+				
 				const data = await res.json();
-				if(!res.ok){
-					const errorData = await res.json()
-					throw new Error(errorData.error || "Not authenticated")
+				if(data.error){
+					return null;  // to logout after when we fetch it will send a error if it then make it as null which makes us to redirect inot the login page
 				}
-				console.log(data)
+				if(!res.ok){
+					throw new Error(data.error || "Not authenticated")
+				}
+			
 				return data;
 			}
 			catch(e){
-				console.error(e)
-				throw new Error (e);
+				console.log(e);
+				throw new Error(e);
 			}
 		},
 		retry: false // nomally tanstack use 4 times to check to avoid that 
 
 	})
+
+	console.log(authUser)
 
 	if(isLoading){
 		return(
@@ -59,6 +64,7 @@ const App = ()=> {
 		<div className="flex max-w-6xl mx-auto">
 		  {authUser &&< Sidebar />}
 		  <Routes>
+			
 			<Route
 			  path="/"
 			  element={ authUser?

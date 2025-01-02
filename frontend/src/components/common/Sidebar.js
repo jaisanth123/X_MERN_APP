@@ -5,7 +5,7 @@ import { IoNotifications } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
-import {useMutation} from "@tanstack/react-query"
+import {useMutation, useQueryClient} from "@tanstack/react-query"
 import { baseUrl } from "../../constant/url";
 import toast from "react-hot-toast"
 
@@ -15,6 +15,8 @@ const Sidebar = () => {
     username: "johndoe",
     profileImg: "/avatars/boy1.png",
   };
+  
+  const queryClient = useQueryClient();
 
   const{mutate : logout,isPending,isError,error} = useMutation({
     mutationFn: async() =>{  //no data since logout
@@ -43,7 +45,11 @@ e.preventDefault()
 toast.promise(
   new Promise((resolve,reject)=>{
     logout(null,{
-      onSuccess : resolve,
+      onSuccess : ()=>{resolve();
+        queryClient.invalidateQueries({
+          queryKey: ["authUser"]
+        })
+      },
       onError: reject})
 }),{
   loading : "logging out",
