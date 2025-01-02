@@ -5,6 +5,9 @@ import { IoNotifications } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
+import {useMutation} from "@tanstack/react-query"
+import { baseUrl } from "../../constant/url";
+import toast from "react-hot-toast"
 
 const Sidebar = () => {
   const data = {
@@ -12,6 +15,44 @@ const Sidebar = () => {
     username: "johndoe",
     profileImg: "/avatars/boy1.png",
   };
+
+  const{mutate : logout,isPending,isError,error} = useMutation({
+    mutationFn: async() =>{  //no data since logout
+      try{
+        const res = await fetch(`${baseUrl}/api/auth/logout`,{
+          method:"POST",
+          credentials:"include",
+          headers:{
+            "Content-Type" : "application/json"
+          }
+        })
+        const data = await res.json();
+        if(!res.ok){
+          throw new Error(data.error || "Failed to logout")
+        }
+      }
+      catch(e){
+        throw e
+      }
+    }
+  } 
+  )
+
+const handleLogout = (e) =>{
+e.preventDefault()
+toast.promise(
+  new Promise((resolve,reject)=>{
+    logout(null,{
+      onSuccess : resolve,
+      onError: reject})
+}),{
+  loading : "logging out",
+  success : "Logged out successfully",
+  error : "Failed to logout"
+}
+
+)
+}
 
   return (
     <div className="md:flex-[2_2_0] w-18 max-w-52">
@@ -69,7 +110,11 @@ const Sidebar = () => {
                 </p>
                 <p className="text-slate-500 text-sm">@{data?.username}</p>
               </div>
-              <BiLogOut className="w-5 h-5 cursor-pointer" />
+              <BiLogOut className="w-5 h-5 cursor-pointer"
+              onClick={(e)=>{
+                handleLogout(e)
+              }}
+              />
             </div>
           </Link>
         )}

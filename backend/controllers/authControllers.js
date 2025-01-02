@@ -89,7 +89,7 @@ export const login = async (req, res) => {
     }
     const isPasswordCorrect = await bcrypt.compare(
       password,
-      User.password
+      user.password
     ); // it is used avoid app crash
 
     if(!isPasswordCorrect) {
