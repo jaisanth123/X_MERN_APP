@@ -16,7 +16,7 @@ const Post = ({ post }) => {
   const { mutate: deletePost, isPending:isDeleting } = useMutation({
     mutationFn: async () => {
       try{  const res = await fetch(
-        `${baseUrl}/api/posts/:${post._id}`,
+        `${baseUrl}/api/posts/${post._id}`,
          //thi is to delete the post send it with the post id
         {
           method: "DELETE",
