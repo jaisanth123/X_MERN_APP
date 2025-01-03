@@ -14,6 +14,8 @@ import { MdEdit } from "react-icons/md";
 import { useQuery } from "@tanstack/react-query";
 import { baseUrl } from "../../constant/url";
 import { formatMemberSinceDate } from "../../utils/date";
+import useFollow from "../../hooks/useFollow";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const ProfilePage = () => {
   const [coverImg, setCoverImg] = useState(null);
@@ -22,7 +24,7 @@ const ProfilePage = () => {
 
   const coverImgRef = useRef(null);
   const profileImgRef = useRef(null);
-  const isMyProfile = true;
+
   const {username} = useParams()
 
   const {data:user, isLoading,refetch,isRefetching} = useQuery({
@@ -30,7 +32,7 @@ const ProfilePage = () => {
     queryFn : async() => {
       try{
         const res = await fetch(`${baseUrl}/api/users/profile/${username}`,{
-         // http://localhost:5000/api/posts//user/6773d7d52960f9870fbd9d9d
+    
           method:"GET",
           credentials: "include",
           headers:{
@@ -48,6 +50,9 @@ const ProfilePage = () => {
       }
     }
   })
+
+
+const {data:authUser} =  useQuery({queryKey:["authUser"]})
 
   useEffect(()=>{
     refetch();
@@ -69,6 +74,12 @@ const ProfilePage = () => {
   };
 
 
+  const isMyProfile = authUser?._id === user?._id;
+
+
+  const {follow,isPending} = useFollow()
+
+  const amIFollowing = authUser?.following.includes(user?._id)
 
   return (
     <>
@@ -146,9 +157,13 @@ const ProfilePage = () => {
                 {!isMyProfile && (
                   <button
                     className="rounded-full btn btn-outline btn-sm"
-                    onClick={() => alert("Followed successfully")}
+                    onClick={() =>{
+                      follow(user._id);
+                    }}
                   >
-                    Follow
+                  {isPending && <LoadingSpinner size="sm"/>}
+                  {!isPending && amIFollowing && "Unfollow"}
+                  {!isPending && !amIFollowing && "follow"}
                   </button>
                 )}
                 {(coverImg || profileImg) && (
