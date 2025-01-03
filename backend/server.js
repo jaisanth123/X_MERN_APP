@@ -14,14 +14,22 @@ const PORT = process.env.PORT;
 const app = express();
 
 
-app.use(express.json());
+app.use(express.json({
+  limit : "5mb"
+}));
+//limit to 10mb for image and also secure from attackers to send large palods
+  //! default : 100kbb
+
 app.use(cookieParser());
+
 app.use(cors({
   origin: "http://localhost:3000",
-  credentials: true, //allow the client to send cookies
-}))
+  credentials: true,//allow the client to send cookies
+}));
+
 app.use(express.urlencoded({
   extended: true, // support parsing of application/x-www-form-urlencoded
+ //limit to 10mb for image and also secure from attackers to send large palods
 }));
 
 /*app.get("/",(req,res)=>{
@@ -30,10 +38,16 @@ app.use(express.urlencoded({
 
 //! config cloudinary
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET_KEY,  
 });
+
+// cloudinary.config({
+//   cloud_name:'dvetod3lv',
+//   api_key: '317467139159717',
+//   api_secret: 'LMX0UpESeefftniBt-qsdPYEx6Q',  
+// });
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
@@ -45,3 +59,5 @@ app.listen(PORT, () => {
   console.log(`sever is running in port ${PORT} `);
   connectDB();
 });
+
+

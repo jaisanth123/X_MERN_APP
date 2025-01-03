@@ -110,7 +110,7 @@ const Post = ({ post }) => {
               <img
                 src={post.img}
                 className="object-contain border border-gray-700 rounded-lg h-80"
-                alt=""
+                alt="fdsgdgfsdgf"
               />
             )}
           </div>

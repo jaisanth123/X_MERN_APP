@@ -7,30 +7,38 @@ export const createPost = async (req, res) => {
   try {
     const { text } = req.body;
     let { img } = req.body;
-    const userId = req.user._id.toString(); //it is in object so we cange it into ong
+    const userId = req.user._id.toString(); // Convert ObjectId to string
     const user = await User.findOne({ _id: userId });
+
+    // Ensure user exists
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    // Validate the presence of text or image
     if (!text && !img) {
       return res.status(400).json({ message: "Text or image are required" });
     }
 
-    if (img) {
-      const uploadedResponse = await cloudinary.uploader.upload(img);
-      img = uploadedResponse.secure_url;
-    }
+		if (img) {
+			const uploadedResponse = await cloudinary.uploader.upload(img);
+			img = uploadedResponse.secure_url;
+		}
 
+    // Create new post object
     const newPost = new Post({
       user: userId,
       text,
       img,
     });
 
+    // Save post to the database
     await newPost.save();
+
+    // Return successful response with the created post
     res.status(201).json(newPost);
   } catch (error) {
-    console.error(`Error in creating post: ${error}`);
+    console.error("Error in creating post:", error.message, error.stack || error);
     res.status(500).json({ error: "Error while creating post" });
   }
 };
@@ -204,7 +212,7 @@ export const getFollowingPosts = async (req, res) => {
   try {
     const userId = req.user.id;
     //not params.id becaue we not use following/:id
-    console.log(userId);
+   // console.log(userId);
     const user = await User.findOne({ _id: userId });
 
     if (!user) {
