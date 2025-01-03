@@ -246,8 +246,8 @@ export const getFollowingPosts = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const user = await User.findOne({ _id: userId });
+    const username = req.params.username;
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

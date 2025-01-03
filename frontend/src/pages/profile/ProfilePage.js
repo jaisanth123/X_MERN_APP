@@ -30,6 +30,7 @@ const ProfilePage = () => {
     queryFn : async() => {
       try{
         const res = await fetch(`${baseUrl}/api/users/profile/${username}`,{
+         // http://localhost:5000/api/posts//user/6773d7d52960f9870fbd9d9d
           method:"GET",
           credentials: "include",
           headers:{
@@ -37,7 +38,7 @@ const ProfilePage = () => {
           }
         })
         const data = await res.json();
-        console.log("Fetched User Data:", data);
+   
         if (!res.ok) throw new Error("Server Error");
         return data;
       }
@@ -230,7 +231,7 @@ const ProfilePage = () => {
             </>
           )}
 
-          <Posts />
+          <Posts feedType={feedType} username={username} userId={user?._id}/>
         </div>
       </div>
     </>
