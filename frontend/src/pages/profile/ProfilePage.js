@@ -11,11 +11,12 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { baseUrl } from "../../constant/url";
 import { formatMemberSinceDate } from "../../utils/date";
 import useFollow from "../../hooks/useFollow";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
+import toast from "react-hot-toast";
 
 const ProfilePage = () => {
   const [coverImg, setCoverImg] = useState(null);
@@ -24,7 +25,7 @@ const ProfilePage = () => {
 
   const coverImgRef = useRef(null);
   const profileImgRef = useRef(null);
-
+  const queryClient = useQueryClient()
   const {username} = useParams()
 
   const {data:user, isLoading,refetch,isRefetching} = useQuery({
@@ -57,6 +58,42 @@ const {data:authUser} =  useQuery({queryKey:["authUser"]})
   useEffect(()=>{
     refetch();
   },[username,refetch])
+
+  const {mutate:updateProfile , isPending : isUpdatingProfile} = useMutation({
+    mutationFn: async () => {
+      try {
+
+        const res = await fetch(`${baseUrl}/api/users/update`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            coverImg,
+            profileImg,
+          }),
+        })
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "something went wrong");
+        return data;
+
+  }
+  catch(err){
+    throw err;
+  }},
+  onSuccess:()=>{
+    toast.success("profile updated successfully")
+    Promise.all([
+        queryClient.invalidateQueries({queryKey:["authUser"]}),
+        queryClient.invalidateQueries({queryKey:["userProfile"]})
+
+    ])
+  },
+  onError: (err) => {
+    toast.error(err.message);
+  },
+})
 
 
   const memberSinceData = formatMemberSinceDate(user ?. createdAt)
@@ -169,9 +206,10 @@ const {data:authUser} =  useQuery({queryKey:["authUser"]})
                 {(coverImg || profileImg) && (
                   <button
                     className="px-4 ml-2 text-white rounded-full btn btn-primary btn-sm"
-                    onClick={() => alert("Profile updated successfully")}
+                    onClick={() => updateProfile()}
                   >
-                    Update
+                    {isUpdatingProfile && <LoadingSpinner size="sm"/>}
+                    {!isUpdatingProfile && "Update"}
                   </button>
                 )}
               </div>

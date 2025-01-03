@@ -15,7 +15,7 @@ const app = express();
 
 
 app.use(express.json({
-  limit : "5mb"
+  limit : "10mb"
 }));
 //limit to 10mb for image and also secure from attackers to send large palods
   //! default : 100kbb
