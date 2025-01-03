@@ -43,11 +43,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET_KEY,  
 });
 
-// cloudinary.config({
-//   cloud_name:'dvetod3lv',
-//   api_key: '317467139159717',
-//   api_secret: 'LMX0UpESeefftniBt-qsdPYEx6Q',  
-// });
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
