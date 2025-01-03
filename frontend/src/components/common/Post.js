@@ -56,8 +56,36 @@ const Post = ({ post }) => {
 
   const formattedDate = "1h";
 
-  const isCommenting = false;
+  
+  const {mutate : commentPost,isPending : isCommenting}= useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/posts/comment/${post._id}`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({text:comment}),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error("Failed to comment on post");
+        return data;
+      } catch (error) {
+        console.error(error.message);
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success("Comment posted!");
+      setComment("")
+      queryClient.invalidateQueries({queryKey:["posts"]})
+      
+    },
+    onError: (error) => toast.error(error.message),
+  })
 
+  
   const { mutate: likePost, isPending: isLiking } = useMutation({
     mutationFn: async () => {
       const res = await fetch(`${baseUrl}/api/posts/like/${post._id}`, {
@@ -85,6 +113,8 @@ const Post = ({ post }) => {
 
   const handlePostComment = (e) => {
     e.preventDefault();
+    if(isCommenting) return
+    commentPost()
   };
 
   const handleLikePost = () => {
