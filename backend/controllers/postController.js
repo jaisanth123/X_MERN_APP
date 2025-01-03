@@ -37,8 +37,8 @@ export const createPost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
   try {
-    const { id } = req.params;
-    const post = await Post.findOne({ _id: id });
+    const { postId } = req.params;
+    const post = await Post.findOne({ _id: postId });
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
@@ -54,11 +54,11 @@ export const deletePost = async (req, res) => {
       const imgId = post.img.split("/").pop().split(".")[0];
       await cloudinary.uploader.destroy(imgId);
     }
-    await Post.findByIdAndDelete({ _id: id });
+    await Post.findByIdAndDelete({ _id: postId });
     res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
     console.error(`Error in deleting post: ${error}`);
-    res.status(500).json({ error: "Error while deleting post" });
+    res.status(500).json({ error: `Error while deleting post ${error}` });
   }
 };
 
