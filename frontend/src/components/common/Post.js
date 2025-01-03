@@ -15,44 +15,42 @@ const Post = ({ post }) => {
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
   const queryClient = useQueryClient();
 
-
-  const { mutate: deletePost, isPending:isDeleting } = useMutation({
+  const { mutate: deletePost, isPending: isDeleting } = useMutation({
     mutationFn: async () => {
-      try{  const res = await fetch(
-        `${baseUrl}/api/posts/${post._id}`,
-         //thi is to delete the post send it with the post id
-        {
-          method: "DELETE",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      
-      );
-      console.log(`${baseUrl}/api/posts/:${post._id}`)
-      const data = await res.json();
-      console.log(data)
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to delete post");
-      }
-      return data}
-      catch(error){
+      try {
+        const res = await fetch(
+          `${baseUrl}/api/posts/${post._id}`,
+          //thi is to delete the post send it with the post id
+          {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(`${baseUrl}/api/posts/:${post._id}`);
+        const data = await res.json();
+        console.log(data);
+        if (!res.ok) {
+          throw new Error(data.error || "Failed to delete post");
+        }
+        return data;
+      } catch (error) {
         console.error(error.message);
         throw error;
       }
     },
-    onSuccess:()=>{
-      toast.success("post deleted")
+    onSuccess: () => {
+      toast.success("post deleted");
       queryClient.invalidateQueries({
-        queryKey: ["posts"]
+        queryKey: ["posts"],
       });
-    }
+    },
   });
 
-  
   const postOwner = post.user;
-  const isLiked = false;
+  const isLiked = post.likes.includes(authUser._id);  // the post's likes array have  the current user id 
 
   const isMyPost = authUser._id === post.user._id; // to show delete button
 
@@ -60,15 +58,39 @@ const Post = ({ post }) => {
 
   const isCommenting = false;
 
+  const { mutate: likePost, isPending: isLiking } = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`${baseUrl}/api/posts/like/${post._id}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) throw new Error("Failed to like post");
+      return res.json();
+    },
+    onSuccess: (updatedLikes) => {
+      queryClient.setQueryData(["posts"], (oldData) =>
+        oldData.map((p) => (p._id === post._id ? { ...p, likes: updatedLikes } : p))
+      );
+      toast.success("Post liked!");
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
   const handleDeletePost = () => {
-    deletePost(); 
+    deletePost();
   };
 
   const handlePostComment = (e) => {
     e.preventDefault();
   };
 
-  const handleLikePost = () => {};
+  const handleLikePost = () => {
+    if(isLiking) return ;  // avoid multipile time liking before updated 
+    likePost();
+  };
 
   return (
     <>
@@ -95,12 +117,13 @@ const Post = ({ post }) => {
             </span>
             {isMyPost && (
               <span className="flex justify-end flex-1">
-                {!isDeleting &&(                <FaTrash
-                  className="cursor-pointer hover:text-red-500"
-                  onClick={handleDeletePost}
-                />)}
-                {isDeleting && (<LoadingSpinner size="sm"/>)}
-
+                {!isDeleting && (
+                  <FaTrash
+                    className="cursor-pointer hover:text-red-500"
+                    onClick={handleDeletePost}
+                  />
+                )}
+                {isDeleting && <LoadingSpinner size="sm" />}
               </span>
             )}
           </div>
@@ -201,16 +224,17 @@ const Post = ({ post }) => {
                 className="flex items-center gap-1 cursor-pointer group"
                 onClick={handleLikePost}
               >
-                {!isLiked && (
+                {isLiking && <LoadingSpinner size ="sm"/>}
+                {!isLiked && !isLiking && (
                   <FaRegHeart className="w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500" />
                 )}
-                {isLiked && (
+                {isLiked && !isLiking && (
                   <FaRegHeart className="w-4 h-4 text-pink-500 cursor-pointer " />
                 )}
 
                 <span
-                  className={`text-sm text-slate-500 group-hover:text-pink-500 ${
-                    isLiked ? "text-pink-500" : ""
+                  className={`text-sm  group-hover:text-pink-500 ${
+                    isLiked ? "text-pink-500" : "text-slate-500"
                   }`}
                 >
                   {post.likes.length}
