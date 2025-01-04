@@ -149,4 +149,7 @@
 ! after form end 
     => npm i @tanstack/react-query
     => update index.js
+
+!     "build" : "npm install && npm install --include=dev --prefix frontend && npm run build --prefix frontend"
+! in the package.json file of the whole application which makes when we use npm run build it will perform all the above commands in the respective folders 
     */

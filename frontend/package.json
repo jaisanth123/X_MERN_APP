@@ -9,7 +9,8 @@
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.1",
     "react-router-dom": "^7.1.1",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "x_mern_app": "file:.."
   },
   "scripts": {
     "start": "react-scripts start",
