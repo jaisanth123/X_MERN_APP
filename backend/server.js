@@ -33,9 +33,9 @@ app.use(express.urlencoded({
  //limit to 10mb for image and also secure from attackers to send large palods
 }));
 
-/*app.get("/",(req,res)=>{
-    res.send("X_Clone MERN")
-}) */
+// app.get("/",(req,res)=>{
+//     res.send("X_Clone MERN")
+// }) 
 
 //! config cloudinary
 cloudinary.config({
@@ -58,7 +58,7 @@ if(process.env.NODE_ENV === "production"){
   app.use(express.static(path.join(__dirname,"/frontend/build")))
     // it will convert all the frontend file into a single static file which is going to be stored inside __dirbame/frontend/build
   app.use("*",(req,res)=>{
-    res.sendFile(path.resolve(__dirname,"frontend/build/index.html"));
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
     // if we give request to other path via url it will defaultly show the index.html file
   })
 
