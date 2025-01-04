@@ -17,6 +17,7 @@ import { formatMemberSinceDate } from "../../utils/date";
 import useFollow from "../../hooks/useFollow";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import toast from "react-hot-toast";
+import useUpdateUserProfile from "../../hooks/useUpdateUserProfile";
 
 const ProfilePage = () => {
   const [coverImg, setCoverImg] = useState(null);
@@ -25,7 +26,7 @@ const ProfilePage = () => {
 
   const coverImgRef = useRef(null);
   const profileImgRef = useRef(null);
-  const queryClient = useQueryClient()
+
   const {username} = useParams()
 
   const {data:user, isLoading,refetch,isRefetching} = useQuery({
@@ -59,41 +60,8 @@ const {data:authUser} =  useQuery({queryKey:["authUser"]})
     refetch();
   },[username,refetch])
 
-  const {mutate:updateProfile , isPending : isUpdatingProfile} = useMutation({
-    mutationFn: async () => {
-      try {
+  const {updateProfile,isUpdatingProfile} = useUpdateUserProfile()
 
-        const res = await fetch(`${baseUrl}/api/users/update`, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            coverImg,
-            profileImg,
-          }),
-        })
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "something went wrong");
-        return data;
-
-  }
-  catch(err){
-    throw err;
-  }},
-  onSuccess:()=>{
-    toast.success("profile updated successfully")
-    Promise.all([
-        queryClient.invalidateQueries({queryKey:["authUser"]}),
-        queryClient.invalidateQueries({queryKey:["userProfile"]})
-
-    ])
-  },
-  onError: (err) => {
-    toast.error(err.message);
-  },
-})
 
 
   const memberSinceData = formatMemberSinceDate(user ?. createdAt)
@@ -206,7 +174,9 @@ const {data:authUser} =  useQuery({queryKey:["authUser"]})
                 {(coverImg || profileImg) && (
                   <button
                     className="px-4 ml-2 text-white rounded-full btn btn-primary btn-sm"
-                    onClick={() => updateProfile()}
+                    onClick={() => updateProfile({
+                      coverImg,profileImg
+                    })}
                   >
                     {isUpdatingProfile && <LoadingSpinner size="sm"/>}
                     {!isUpdatingProfile && "Update"}
