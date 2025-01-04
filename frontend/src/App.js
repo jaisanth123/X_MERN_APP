@@ -34,7 +34,7 @@ const App = ()=> {
 					return null;  // to logout after when we fetch it will send a error if it then make it as null which makes us to redirect inot the login page
 				}
 				if(!res.ok){
-					throw new Error(data.error || "Not authenticated")
+					return null
 				}
 			
 				return data;
@@ -52,7 +52,7 @@ const App = ()=> {
 
 	if(isLoading){
 		return(
-			<div className="flex justify-center items-center h-screen">
+			<div className="flex items-center justify-center h-screen">
 				<LoadingSpinner size="3xl"/> 
 				{/* overriding size by lg */}
 
