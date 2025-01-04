@@ -174,9 +174,11 @@ const {data:authUser} =  useQuery({queryKey:["authUser"]})
                 {(coverImg || profileImg) && (
                   <button
                     className="px-4 ml-2 text-white rounded-full btn btn-primary btn-sm"
-                    onClick={() => updateProfile({
-                      coverImg,profileImg
-                    })}
+                    onClick={async() => {updateProfile(
+                      {coverImg,profileImg})
+                      setCoverImg(null)
+                      setProfileImg(null)
+                    }}
                   >
                     {isUpdatingProfile && <LoadingSpinner size="sm"/>}
                     {!isUpdatingProfile && "Update"}
